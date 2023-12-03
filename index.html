@@ -37,7 +37,7 @@
 		box-shadow: none !important;
 		background-color: #212121 !important;
 		color: #fffffe !important;
-          outline: none !important;
+        outline: none !important;
 	}
 
 	.btn {
@@ -53,70 +53,79 @@
 </head>
 
 <body>
-     <div class="container-fluid vh-100">
-          <div class="row h-100 justify-content-center align-items-center">
-               <div class="col-md-4">
-                    <div class="card">
-                         <div class="card-body">
-                              <h5 class="card-title mb-3">
-                                   <span class="material-symbols-outlined">cookie</span> Black Vatican Curl Generator
-                              </h5>
-                              <textarea class="form-control mb-3" id="curl" rows="7"></textarea>
-                              <div class="row">
-                                   <div class="col-8 pe-0">
-                                        <button class="btn btn-sm w-100 mb-2" onclick="generate_requests()">
-                                             <span class="material-symbols-outlined">cookie</span> GENERATE
-                                        </button>
-                                   </div>
-                                   <div class="col-2">
-                                        <button class="btn btn-sm w-100 mb-2">
-                                             <span class="material-symbols-outlined">content_copy</span>
-                                        </button>
-                                   </div>
-                                   <div class="col-2 ps-0">
-                                        <button class="btn btn-sm w-100 mb-2">
-                                             <span class="material-symbols-outlined">delete</span>
-                                        </button>
-                                   </div>
-                              </div>
-                         </div>
+    <div class="container-fluid vh-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">
+                            <span class="material-symbols-outlined">cookie</span> Black Vatican Curl Generator
+                        </h5>
+                        <textarea class="form-control mb-3" id="curl" rows="7"></textarea>
+                        <div class="row">
+                            <div class="col-8 pe-0">
+                                <button class="btn btn-sm w-100 mb-2" onclick="generate_requests()">
+                                    <span class="material-symbols-outlined">cookie</span> GENERATE
+                                </button>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn btn-sm w-100 mb-2" onclick="Copy()">
+                                    <span class="material-symbols-outlined">content_copy</span>
+                                </button>
+                            </div>
+                            <div class="col-2 ps-0">
+                                <button class="btn btn-sm w-100 mb-2">
+                                    <span class="material-symbols-outlined" onclick="Delete()">delete</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-               </div>
-          </div>
-     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script>
-     const generate_requests = () => {
-          const curl = document.getElementById('curl').value.replace('^', '');
+    const generate_requests = () => {
+        const curl = document.getElementById('curl').value.replace('^', '');
 
-          if(curl.match(/-X\s+([A-Z]+)/)) {
-               var method = curl.match(/-X\s+([A-Z]+)/)[1].toLowerCase();
-               if(curl.match(/--data-raw "(.*?)"/)[1]) {
-                    var data = curl.match(/--data-raw "(.*?)"/)[1];
-               }
-          }
-          else {
-               var method = 'get';
-          }
+        if(curl.match(/-X\s+([A-Z]+)/)) {
+            var method = curl.match(/-X\s+([A-Z]+)/)[1].toLowerCase();
+            if(curl.match(/--data-raw "(.*?)"/)[1]) {
+                var data = curl.match(/--data-raw "(.*?)"/)[1];
+            }
+        }
+        else {
+            var method = 'get';
+        }
 
-          const url = curl.match(/curl "(.*?)"/)[1]
+        const url = curl.match(/curl "(.*?)"/)[1]
 
-          const headers = [];
-          curl.split('-H "').splice(1).forEach(function (value, index) {
-               const header_key = value.split('"')[0].split(': ')[0];
-               if(header_key != 'Accept-Encoding') {
-                    const header_value = value.split('"')[0].split(': ')[1];
-                    headers.push(`\t"${header_key}": "${header_value}",`);
-               }
-          });
-          if(method == 'post') {
-               document.getElementById('curl').value = `headers = {\n${headers.join('\n')}\n}\ndata = "${data}"\nresponse = session.${method}("${url}", headers=headers, data=data)`
-          }
-          else {
-               document.getElementById('curl').value = `headers = {\n${headers.join('\n')}\n}\nresponse = session.${method}("${url}", headers=headers)`
-          }
-     }
+        const headers = [];
+        curl.split('-H "').splice(1).forEach(function (value, index) {
+            const header_key = value.split('"')[0].split(': ')[0];
+            if(header_key != 'Accept-Encoding') {
+                const header_value = value.split('"')[0].split(': ')[1];
+                headers.push(`\t"${header_key}": "${header_value}",`);
+            }
+        });
+        if(method == 'post') {
+            document.getElementById('curl').value = `headers = {\n${headers.join('\n')}\n}\ndata = "${data}"\nresponse = session.${method}("${url}", headers=headers, data=data)`
+        }
+        else {
+            document.getElementById('curl').value = `headers = {\n${headers.join('\n')}\n}\nresponse = session.${method}("${url}", headers=headers)`
+        }
+    }
+    const Copy = () => {
+
+        const curl = document.getElementById("curl");
+
+        curl.select();
+        
+        document.execCommand("copy");
+    }
+    const Delete = () => document.getElementById("curl").value = '';
 
 </script>
 </html>
